@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FrizerskiSalon_MobileClient</string>
+    <string-array name="spol_array">
+        <item>Moški</item>
+        <item>Ženski</item>
+    </string-array>
 </resources>
