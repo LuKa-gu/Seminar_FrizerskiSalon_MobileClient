@@ -97,6 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, FrizerjiActivity.class));
             });
 
+            Button btnPregledTerminov = findViewById(R.id.btnPregledTerminov);
+            btnPregledTerminov.setOnClickListener(v -> {
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        PregledActivity.class
+                );
+                startActivity(intent);
+            });
+
             /* =======================
                GET frizerji
                ======================= */

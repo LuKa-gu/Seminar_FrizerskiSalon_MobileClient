@@ -27,6 +27,8 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.FrizerjiActivity" />
         <activity android:name=".ui.PredogledActivity" />
+        <activity android:name=".ui.RezervacijaActivity" />
+        <activity android:name=".ui.PregledActivity" />
     </application>
 
 </manifest>

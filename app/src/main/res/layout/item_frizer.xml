@@ -14,14 +14,25 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/tvStarostMail"
+        android:id="@+id/tvStarost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/tvTelefonOpis"
+        android:id="@+id/tvMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvTelefon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvOpis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minLines="2"/>
 
     <TextView
         android:id="@+id/tvSpecializacije"

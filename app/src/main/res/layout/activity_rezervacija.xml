@@ -9,22 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnNazaj"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nazaj"
-            android:layout_marginTop="8dp" />
-
         <TextView
             android:id="@+id/tvNaslov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rezerviraj termin"
+            android:text="Povzetek rezervacije"
             android:textStyle="bold"
             android:textSize="18dp"
             android:padding="12dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:textColor="@color/black"/>
 
         <TextView
@@ -40,44 +33,33 @@
             android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/tvDan"
+            android:id="@+id/tvZacetek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/tvTrajanje"
+            android:id="@+id/tvKonec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/tvBloki"
+            android:id="@+id/tvSkTrajanje"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
 
         <TextView
+            android:id="@+id/tvSkCena"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Izberi uro termina:"
             android:layout_marginTop="12dp"/>
 
-        <EditText
-            android:id="@+id/etUra"
+        <TextView
+            android:id="@+id/tvOpombe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Izberi"
-            android:minLines="2"
-            android:focusable="false"
-            android:clickable="true"
-            android:inputType="none"/>
-
-        <EditText
-            android:id="@+id/etOpombe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Opombe"
             android:minLines="3"
             android:layout_marginTop="12dp"/>
 
@@ -87,6 +69,13 @@
             android:layout_height="wrap_content"
             android:text="Potrdi"
             android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnPreklici"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prekliči"
+            android:layout_marginTop="12dp" />
 
     </LinearLayout>
 </ScrollView>

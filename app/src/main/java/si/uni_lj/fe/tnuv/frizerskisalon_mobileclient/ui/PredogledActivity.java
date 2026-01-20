@@ -1,22 +1,33 @@
 package si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.ui;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
+
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
 
 public class PredogledActivity extends AppCompatActivity {
-
     private static final String PREFS_NAME = "auth";
     private static final String PREFS_TOKEN_KEY = "token";
     private String izbranaUra = null;
@@ -106,14 +117,102 @@ public class PredogledActivity extends AppCompatActivity {
                     return;
                 }
 
+                int frizerId = getIntent().getIntExtra("frizerId", -1);
+                ArrayList<Integer> storitveIds =
+                        getIntent().getIntegerArrayListExtra("storitveIds");
+
                 String opombe = etOpombe.getText().toString().trim();
 
-                // TUKAJ BO kasneje POST /predogled
-                Toast.makeText(this,
-                        "Predogled pripravljen",
-                        Toast.LENGTH_SHORT).show();
+                Map<String, Object> body = new HashMap<>();
+                body.put("frizer_ID", frizerId);
+                body.put("dan", dan);
+                body.put("ura", izbranaUra);
+                body.put("storitve", storitveIds);
+                body.put("opombe", opombe.isEmpty() ? null : opombe);
+
+                PredogledApi api = retrofit.create(PredogledApi.class);
+                Log.d("predogled_body", body.toString()); //test
+                api.posljiPredogled(body).enqueue(new Callback<Map<String, Object>>() {
+                    @Override
+                    public void onResponse(Call<Map<String, Object>> call,
+                                           Response<Map<String, Object>> response) {
+
+                        if (!response.isSuccessful()) {
+                            String errorMsg = "Napaka: " + response.code();
+
+                            try {
+                                if (response.errorBody() != null) {
+                                    String errorJson = response.errorBody().string();
+
+                                    JSONObject obj = new JSONObject(errorJson);
+                                    errorMsg = obj.optString("message", errorMsg);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(
+                                    PredogledActivity.this,
+                                    errorMsg,
+                                    Toast.LENGTH_LONG
+                            ).show();
+                            return;
+                        }
+
+                        Map<String, Object> json = response.body();
+
+                        // ➜ prehod v RezervacijaActivity
+                        Intent intent = new Intent(
+                                PredogledActivity.this,
+                                RezervacijaActivity.class
+                        );
+
+                        intent.putExtra("frizer", (String) json.get("frizer"));
+                        intent.putExtra("zacetek", (String)
+                                json.get("zacetek_termina"));
+                        intent.putExtra("konec", (String)
+                                json.get("konec_termina"));
+
+                        intent.putExtra("skupno_trajanje", ((Number)
+                                json.get("skupno_trajanje")).intValue());
+                        intent.putExtra("skupna_cena", ((Number)
+                                json.get("skupna_cena")).doubleValue());
+
+                        // storitve kot ArrayList
+                        ArrayList<Map<String, Object>> storitve =
+                                (ArrayList<Map<String, Object>>) json.get("storitve");
+
+                        intent.putExtra("storitve", storitve);
+
+                        Object opombeObj = json.get("opombe");
+                        intent.putExtra("opombe",
+                                opombeObj != null ? (String) opombeObj : null
+                        );
+
+                        intent.putExtra("frizer_ID", frizerId);
+                        intent.putExtra("dan", dan);
+                        intent.putExtra("ura", izbranaUra);
+                        intent.putIntegerArrayListExtra("storitveIds", storitveIds);
+
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                        Toast.makeText(
+                                PredogledActivity.this,
+                                "Napaka pri povezavi",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                });
             });
         });
+    }
+    interface PredogledApi {
+        @POST("termini/predogled")
+        Call<Map<String, Object>> posljiPredogled(
+                @Body Map<String, Object> body
+        );
     }
 }
 

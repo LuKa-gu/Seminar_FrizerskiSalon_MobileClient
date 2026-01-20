@@ -5,11 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvNaslov"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prijava uporabnika"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:padding="12dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"/>
+
     <EditText
         android:id="@+id/etUsername"
         android:hint="Uporabniško ime"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
 
     <EditText
         android:id="@+id/etPassword"
@@ -32,5 +44,5 @@
         android:layout_height="wrap_content"
         android:text="Še nimaš računa? Registriraj se."
         android:textColor="@color/red"
-        android:paddingTop="16dp" />
+        android:layout_marginTop="16dp" />
 </LinearLayout>

@@ -116,8 +116,11 @@ public class FrizerjiActivity extends AppCompatActivity {
             Map<String, Object> f = frizerji.get(position);
 
             holder.tvImePriimek.setText(f.get("Ime") + " " + f.get("Priimek"));
-            holder.tvStarostMail.setText("Starost: " + f.get("Starost") + " | Mail: " + f.get("Mail"));
-            holder.tvTelefonOpis.setText("Telefon: " + f.get("Telefon") + " | Opis: " + f.get("Opis"));
+            Number starost = (Number) f.get("Starost");
+            holder.tvStarost.setText("Starost: " + starost.intValue() + " let");
+            holder.tvMail.setText("Mail: " + f.get("Mail"));
+            holder.tvTelefon.setText("Telefon: " + f.get("Telefon"));
+            holder.tvOpis.setText("Opis: " + f.get("Opis"));
 
             // specializacije
             StringBuilder spec = new StringBuilder("Specializacije: ");
@@ -137,12 +140,11 @@ public class FrizerjiActivity extends AppCompatActivity {
             List<Map<String, Object>> delovniki = (List<Map<String, Object>>) f.get("delovniki");
             if (delovniki != null && !delovniki.isEmpty()) {
                 for (Map<String, Object> d : delovniki) {
-                    del.append(d.get("dan")).append(" ").append(d.get("zacetek"))
-                            .append("-").append(d.get("konec")).append("; ");
+                    del.append("\n• ").append(d.get("dan")).append(": ").append(d.get("zacetek"))
+                            .append(" - ").append(d.get("konec")).append("\n");
                 }
-                del.setLength(del.length() - 2);
             } else {
-                del.append("noben");
+                del.append("/");
             }
             holder.tvDelovniki.setText(del.toString());
         }
@@ -153,13 +155,15 @@ public class FrizerjiActivity extends AppCompatActivity {
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView tvImePriimek, tvStarostMail, tvTelefonOpis, tvSpecializacije, tvDelovniki;
+            TextView tvImePriimek, tvStarost, tvMail, tvTelefon, tvOpis, tvSpecializacije, tvDelovniki;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 tvImePriimek = itemView.findViewById(R.id.tvImePriimek);
-                tvStarostMail = itemView.findViewById(R.id.tvStarostMail);
-                tvTelefonOpis = itemView.findViewById(R.id.tvTelefonOpis);
+                tvStarost = itemView.findViewById(R.id.tvStarost);
+                tvMail = itemView.findViewById(R.id.tvMail);
+                tvTelefon = itemView.findViewById(R.id.tvTelefon);
+                tvOpis = itemView.findViewById(R.id.tvOpis);
                 tvSpecializacije = itemView.findViewById(R.id.tvSpecializacije);
                 tvDelovniki = itemView.findViewById(R.id.tvDelovniki);
             }
