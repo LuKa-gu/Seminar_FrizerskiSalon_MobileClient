@@ -1,19 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:padding="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="12dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvNaslov"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rezerviraj termin"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:padding="12dp"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tvIzbraneStoritve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Izbrane storitve: /"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/btnIzberiStoritve"
+            android:text="Izberi storitve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp" />
+
+        <TextView
+            android:id="@+id/tvOpomba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*Možna je izbira več storitev hkrati."
+            android:textColor="@color/grey"
+            android:padding="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerFrizerji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/tvPreglejFrizerje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preglej vse frizerje"
+            android:textColor="@color/red"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/etDatum"
+            android:hint="Izberi datum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none" />
+
+        <Button
+            android:id="@+id/btnPreveri"
+            android:text="Preveri"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>
