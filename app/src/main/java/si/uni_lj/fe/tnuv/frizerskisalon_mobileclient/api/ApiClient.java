@@ -2,42 +2,33 @@ package si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Interceptor;
-import okhttp3.Response;
-import java.io.IOException;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2:3000/"; // tvoj backend
-    private static Retrofit retrofit = null;
+    private static final String BASE_URL = "http://10.0.2.2:3000/";
 
     // vrne Retrofit instance
     public static Retrofit getClient(final String token) {
-        if (retrofit == null) {
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-            if (token != null) {
-                httpClient.addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request original = chain.request();
-                        Request request = original.newBuilder()
-                                .header("Authorization", "Bearer " + token)
-                                .method(original.method(), original.body())
-                                .build();
-                        return chain.proceed(request);
-                    }
-                });
-            }
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-            retrofit = new Retrofit.Builder()
+        if (token != null) {
+            httpClient.addInterceptor(chain -> {
+                Request original = chain.request();
+                Request request = original.newBuilder()
+                        .header("Authorization", "Bearer " + token)
+                        .method(original.method(), original.body())
+                        .build();
+                return chain.proceed(request);
+            });
+        }
+
+        return new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build())
                     .build();
-        }
-        return retrofit;
     }
 }

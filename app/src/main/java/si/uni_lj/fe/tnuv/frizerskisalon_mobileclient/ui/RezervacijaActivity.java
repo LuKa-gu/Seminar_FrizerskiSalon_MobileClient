@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import retrofit2.http.POST;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 
 public class RezervacijaActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "auth";
@@ -150,7 +154,12 @@ public class RezervacijaActivity extends AppCompatActivity {
                                    Response<Map<String, Object>> response) {
 
                 if (!response.isSuccessful()) {
-                    prikaziNapako(response);
+                    ErrorHandler.showToastError(RezervacijaActivity.this, response, null, "Napaka pri rezervaciji termina.");
+                    return;
+                }
+
+                if (response.body() == null) {
+                    Toast.makeText(RezervacijaActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -178,27 +187,8 @@ public class RezervacijaActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                Toast.makeText(
-                        RezervacijaActivity.this,
-                        "Napaka pri povezavi",
-                        Toast.LENGTH_LONG
-                ).show();
+                ErrorHandler.showToastError(RezervacijaActivity.this, null, t, null);
             }
         });
     }
-
-    private void prikaziNapako(Response<?> response) {
-        String msg = "Napaka: " + response.code();
-
-        try {
-            if (response.errorBody() != null) {
-                String json = response.errorBody().string();
-                JSONObject obj = new JSONObject(json);
-                msg = obj.optString("message", msg);
-            }
-        } catch (Exception ignored) {}
-
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
-
 }

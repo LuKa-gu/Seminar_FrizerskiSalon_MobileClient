@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -36,6 +39,7 @@ import retrofit2.http.Url;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.StoritveAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -141,16 +145,18 @@ public class MainActivity extends AppCompatActivity {
                         );
 
                         spinnerFrizerji.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(
+                                MainActivity.this,
+                                "Napaka pri pridobivanju frizerjev.",
+                                Toast.LENGTH_LONG
+                        ).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Napaka pri nalaganju frizerjev",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    ErrorHandler.showToastError(MainActivity.this, null, t, null);
                 }
             });
 
@@ -169,12 +175,18 @@ public class MainActivity extends AppCompatActivity {
                             storitveNazivi[i] = (String) storitveList.get(i).get("naziv");
                             selectedStoritve[i] = false;
                         }
+                    } else {
+                        Toast.makeText(
+                                MainActivity.this,
+                                "Napaka pri pridobivanju storitev.",
+                                Toast.LENGTH_LONG
+                        ).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "Napaka pri nalaganju storitev", Toast.LENGTH_SHORT).show();
+                    ErrorHandler.showToastError(MainActivity.this, null, t, null);
                 }
             });
 
@@ -278,93 +290,88 @@ public class MainActivity extends AppCompatActivity {
                             Call<Map<String, Object>> call,
                             Response<Map<String, Object>> response
                     ) {
-                        if (!response.isSuccessful() && response.body() == null) {
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    "Napaka pri izračunu razpoložljivosti.",
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                        if (!response.isSuccessful()) {
+                            ErrorHandler.showToastError(MainActivity.this, response, null, "Napaka pri izračunu razpoložljivosti.");
                             return;
                         }
-                            Map<String, Object> data = response.body();
 
-                            // trajanje
-                            int trajanje = ((Number) data.get("trajanje_num")).intValue();
+                        if (response.body() == null) {
+                            Toast.makeText(MainActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
-                            // bloki
-                            @SuppressWarnings("unchecked")
+                        Map<String, Object> data = response.body();
 
-                            ArrayList<String> bloki = new ArrayList<>();
-                            Object rawBloki = data.get("razpolozljivi_bloki");
+                        // trajanje
+                        int trajanje = ((Number) data.get("trajanje_num")).intValue();
 
-                            if (rawBloki instanceof List<?>) {
-                                for (Object o : (List<?>) rawBloki) {
-                                    if(o instanceof Map<?, ?>) {
-                                        Map<?, ?> blok = (Map<?, ?>) o;
+                        // bloki
+                        @SuppressWarnings("unchecked")
 
-                                        String od = blok.get("od") != null ? blok.get("od").toString() : "?";
-                                        String do_ = blok.get("do") != null ? blok.get("do").toString() : "?";
+                        ArrayList<String> bloki = new ArrayList<>();
+                        Object rawBloki = data.get("razpolozljivi_bloki");
 
-                                        bloki.add(od + " - " + do_);
-                                    }
+                        if (rawBloki instanceof List<?>) {
+                            for (Object o : (List<?>) rawBloki) {
+                                if(o instanceof Map<?, ?>) {
+                                    Map<?, ?> blok = (Map<?, ?>) o;
+
+                                    String od = blok.get("od") != null ? blok.get("od").toString() : "?";
+                                    String do_ = blok.get("do") != null ? blok.get("do").toString() : "?";
+
+                                    bloki.add(od + " - " + do_);
                                 }
                             }
+                        }
 
-                            // če ni razpoložljivih blokov
-                            if (bloki == null || bloki.isEmpty()) {
-                                String razlog;
+                        // če ni razpoložljivih blokov
+                        if (bloki == null || bloki.isEmpty()) {
+                            String razlog;
 
-                                if (data.containsKey("razlog") && data.get("razlog") != null) {
-                                    razlog = data.get("razlog").toString();
-                                } else {
-                                    razlog = "Frizer ne dela ta dan.";
-                                }
-
-                                Toast.makeText(
-                                        MainActivity.this,
-                                        razlog,
-                                        Toast.LENGTH_LONG
-                                ).show();
-
-                                return; // ne gremo naprej
+                            if (data.containsKey("razlog") && data.get("razlog") != null) {
+                                razlog = data.get("razlog").toString();
+                            } else {
+                                razlog = "Frizer ne dela ta dan.";
                             }
 
-                            // sicer gremo v PredogledActivity
-                            Intent intent = new Intent(MainActivity.this, PredogledActivity.class);
+                            Toast.makeText(
+                                    MainActivity.this,
+                                    razlog,
+                                    Toast.LENGTH_LONG
+                            ).show();
 
-                            intent.putExtra("frizerId", frizerId);
-                            intent.putExtra("frizerIme", spinnerFrizerji.getSelectedItem().toString());
-                            intent.putExtra("dan", dan);
-                            intent.putExtra("trajanje", trajanje);
+                            return; // ne gremo naprej
+                        }
 
-                            intent.putStringArrayListExtra(
-                                    "razpolozljivi_bloki",
-                                    bloki
-                            );
+                        // sicer gremo v PredogledActivity
+                        Intent intent = new Intent(MainActivity.this, PredogledActivity.class);
 
-                            intent.putIntegerArrayListExtra(
-                                    "storitveIds",
-                                    new ArrayList<>(selectedStoritveIds)
-                            );
+                        intent.putExtra("frizerId", frizerId);
+                        intent.putExtra("frizerIme", spinnerFrizerji.getSelectedItem().toString());
+                        intent.putExtra("dan", dan);
+                        intent.putExtra("trajanje", trajanje);
 
-                            intent.putStringArrayListExtra(
-                                    "storitveNazivi",
-                                    new ArrayList<>(selectedStoritveNazivi)
-                            );
+                        intent.putStringArrayListExtra(
+                                "razpolozljivi_bloki",
+                                bloki
+                        );
 
-                            startActivity(intent);
+                        intent.putIntegerArrayListExtra(
+                                "storitveIds",
+                                new ArrayList<>(selectedStoritveIds)
+                        );
+
+                        intent.putStringArrayListExtra(
+                                "storitveNazivi",
+                                new ArrayList<>(selectedStoritveNazivi)
+                        );
+
+                        startActivity(intent);
                     }
 
                     @Override
-                    public void onFailure(
-                            Call<Map<String, Object>> call,
-                            Throwable t
-                    ) {
-                        Toast.makeText(
-                                MainActivity.this,
-                                "Napaka: " + t.getMessage(),
-                                Toast.LENGTH_SHORT
-                        ).show();
+                    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                        ErrorHandler.showToastError(MainActivity.this, null, t, null);
                     }
                 });
             });
@@ -413,41 +420,38 @@ public class MainActivity extends AppCompatActivity {
                     Call<Map<String, Object>> call,
                     Response<Map<String, Object>> response
             ) {
-                if (response.isSuccessful() && response.body() != null) {
-
-                    Map<String, Object> s = response.body();
-
-                    String ime = String.valueOf(s.get("Ime"));
-                    String opis = String.valueOf(s.get("Opis"));
-                    int trajanje = ((Number) s.get("Trajanje")).intValue();
-                    String cena = String.valueOf(s.get("Cena")); // ker je Cena decimal
-
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle(ime)
-                            .setMessage(
-                                    "Opis:\n" + opis +
-                                            "\n\nTrajanje: " + trajanje + " min" +
-                                            "\n\nCena: " + cena + " €"
-                            )
-                            .setPositiveButton("OK", null)
-                            .show();
-
-                } else {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Napaka pri pridobivanju podrobnosti storitve.",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                if (!response.isSuccessful()) {
+                    ErrorHandler.showToastError(MainActivity.this, response, null, "Napaka pri pridobivanju podrobnosti storitve.");
+                    return;
                 }
+
+                if (response.body() == null) {
+                    Toast.makeText(MainActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Map<String, Object> s = response.body();
+
+                String ime = String.valueOf(s.get("Ime"));
+                String opis = String.valueOf(s.get("Opis"));
+                int trajanje = ((Number) s.get("Trajanje")).intValue();
+                String cena = String.valueOf(s.get("Cena")); // ker je Cena decimal
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(ime)
+                        .setMessage(
+                                "Opis:\n" + opis +
+                                        "\n\nTrajanje: " + trajanje + " min" +
+                                        "\n\nCena: " + cena + " €"
+                        )
+                        .setPositiveButton("OK", null)
+                        .show();
+
             }
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                Toast.makeText(
-                        MainActivity.this,
-                        "Napaka: " + t.getMessage(),
-                        Toast.LENGTH_SHORT
-                ).show();
+                ErrorHandler.showToastError(MainActivity.this, null, t, null);
             }
         });
     }

@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import retrofit2.http.Url;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.TerminiAdapter;
 
 public class PregledActivity extends AppCompatActivity {
@@ -88,7 +92,12 @@ public class PregledActivity extends AppCompatActivity {
                     Response<Map<String, Object>> response) {
 
                 if (!response.isSuccessful()) {
-                    prikaziNapako(response);
+                    ErrorHandler.showToastError(PregledActivity.this, response, null, "Napaka pri preklicu termina.");
+                    return;
+                }
+
+                if (response.body() == null) {
+                    Toast.makeText(PregledActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -103,11 +112,7 @@ public class PregledActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                Toast.makeText(
-                        PregledActivity.this,
-                        "Napaka pri povezavi",
-                        Toast.LENGTH_LONG
-                ).show();
+                ErrorHandler.showToastError(PregledActivity.this, null, t, null);
             }
         });
     }
@@ -122,8 +127,8 @@ public class PregledActivity extends AppCompatActivity {
                 if (!response.isSuccessful() || response.body() == null) {
                     Toast.makeText(
                             PregledActivity.this,
-                            "Napaka pri nalaganju terminov",
-                            Toast.LENGTH_SHORT
+                            "Napaka pri nalaganju terminov.",
+                            Toast.LENGTH_LONG
                     ).show();
                     return;
                 }
@@ -145,27 +150,9 @@ public class PregledActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
-                Toast.makeText(
-                        PregledActivity.this,
-                        "Napaka: " + t.getMessage(),
-                        Toast.LENGTH_SHORT
-                ).show();
+                ErrorHandler.showToastError(PregledActivity.this, null, t, null);
             }
         });
-    }
-
-    private void prikaziNapako(Response<?> response) {
-        String errorMsg = "Napaka: " + response.code();
-        try {
-            if (response.errorBody() != null) {
-                String errorJson = response.errorBody().string();
-                JSONObject obj = new JSONObject(errorJson);
-                errorMsg = obj.optString("message", errorMsg);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
     }
 }
 

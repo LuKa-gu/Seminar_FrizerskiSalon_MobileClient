@@ -27,6 +27,7 @@ import retrofit2.http.GET;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 
 public class FrizerjiActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "auth";
@@ -66,19 +67,15 @@ public class FrizerjiActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(
                                 FrizerjiActivity.this,
-                                "Napaka pri nalaganju frizerjev",
-                                Toast.LENGTH_SHORT
+                                "Napaka pri nalaganju frizerjev.",
+                                Toast.LENGTH_LONG
                         ).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
-                    Toast.makeText(
-                            FrizerjiActivity.this,
-                            "Napaka: " + t.getMessage(),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    ErrorHandler.showToastError(FrizerjiActivity.this, null, t, null);
                 }
             });
         });

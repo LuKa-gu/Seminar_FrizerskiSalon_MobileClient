@@ -10,13 +10,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +25,7 @@ import retrofit2.http.POST;
 
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "auth";
@@ -74,25 +74,39 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    String token = response.body().get(PREFS_TOKEN_KEY);
-                    if (token != null) {
-                        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-                        prefs.edit().putString(PREFS_TOKEN_KEY, token).apply();
+                if (!response.isSuccessful()) {
+                    ErrorHandler.showToastError(LoginActivity.this, response, null, "Napaka pri prijavi.");
+                    return;
+                }
 
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Napaka: token ni vrnjen.", Toast.LENGTH_SHORT).show();
+                if (response.body() == null) {
+                    Toast.makeText(LoginActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Map<String, String> body = response.body();
+
+                String token = body.get(PREFS_TOKEN_KEY);
+                String successMessage = body.get("message");
+
+                if (token != null) {
+                    SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                    prefs.edit().putString(PREFS_TOKEN_KEY, token).apply();
+
+                    if (successMessage != null) {
+                        Toast.makeText(LoginActivity.this, successMessage, Toast.LENGTH_SHORT).show();
                     }
+
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Napačno uporabniško ime ali geslo.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Napaka: token ni vrnjen.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Map<String, String>> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Napaka: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                ErrorHandler.showToastError(LoginActivity.this, null, t, null);
             }
         });
     }

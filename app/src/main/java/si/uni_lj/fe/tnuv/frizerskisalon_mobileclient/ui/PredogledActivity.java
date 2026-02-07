@@ -8,6 +8,9 @@ import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import retrofit2.http.POST;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.JWTManager;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 
 public class PredogledActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "auth";
@@ -64,7 +68,7 @@ public class PredogledActivity extends AppCompatActivity {
             String frizerIme = getIntent().getStringExtra("frizerIme");
             String dan = getIntent().getStringExtra("dan");
 
-            // ===== podatki od response POST /razpolozljivost =====
+            // ===== podatki od POST /razpolozljivost =====
             int trajanje = getIntent().getIntExtra("trajanje", 0);
             ArrayList<String> bloki =
                     getIntent().getStringArrayListExtra("razpolozljivi_bloki");
@@ -138,23 +142,12 @@ public class PredogledActivity extends AppCompatActivity {
                                            Response<Map<String, Object>> response) {
 
                         if (!response.isSuccessful()) {
-                            String errorMsg = "Napaka: " + response.code();
+                            ErrorHandler.showToastError(PredogledActivity.this, response, null, "Napaka pri pripravi predogleda.");
+                            return;
+                        }
 
-                            try {
-                                if (response.errorBody() != null) {
-                                    String errorJson = response.errorBody().string();
-
-                                    JSONObject obj = new JSONObject(errorJson);
-                                    errorMsg = obj.optString("message", errorMsg);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            Toast.makeText(
-                                    PredogledActivity.this,
-                                    errorMsg,
-                                    Toast.LENGTH_LONG
-                            ).show();
+                        if (response.body() == null) {
+                            Toast.makeText(PredogledActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -198,11 +191,7 @@ public class PredogledActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                        Toast.makeText(
-                                PredogledActivity.this,
-                                "Napaka pri povezavi",
-                                Toast.LENGTH_LONG
-                        ).show();
+                        ErrorHandler.showToastError(PredogledActivity.this, null, t, null);
                     }
                 });
             });

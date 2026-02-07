@@ -9,10 +9,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +24,7 @@ import retrofit2.http.POST;
 
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.api.ApiClient;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -87,19 +90,36 @@ public class SignupActivity extends AppCompatActivity {
         call.enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(SignupActivity.this, response.body().get("message") + "Zdaj se lahko prijavite.", Toast.LENGTH_SHORT).show();
-                    // po uspešni registraciji preusmeri na LoginActivity
-                    startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(SignupActivity.this, "Napaka pri registraciji.", Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    ErrorHandler.showToastError(SignupActivity.this, response, null, "Napaka pri registraciji.");
+                    return;
                 }
+
+                if (response.body() == null) {
+                    Toast.makeText(SignupActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String successMessage = response.body().get("message");
+
+                if (successMessage == null) {
+                    successMessage = "Registracija uspešna";
+                }
+
+                new androidx.appcompat.app.AlertDialog.Builder(SignupActivity.this)
+                        .setTitle("Uspeh")
+                        .setMessage(successMessage + "\n\nSedaj se lahko prijavite.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                            finish();
+                        })
+                        .show();
             }
 
             @Override
             public void onFailure(Call<Map<String, String>> call, Throwable t) {
-                Toast.makeText(SignupActivity.this, "Napaka: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                ErrorHandler.showToastError(SignupActivity.this, null, t, null);
             }
         });
     }
