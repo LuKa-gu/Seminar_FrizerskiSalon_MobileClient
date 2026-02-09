@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Vnesi uporabniško ime in geslo.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.vnesi_ime_in_geslo, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -75,12 +72,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
                 if (!response.isSuccessful()) {
-                    ErrorHandler.showToastError(LoginActivity.this, response, null, "Napaka pri prijavi.");
+                    ErrorHandler.showToastError(LoginActivity.this, response, null, getString(R.string.napaka_pri_prijavi));
                     return;
                 }
 
                 if (response.body() == null) {
-                    Toast.makeText(LoginActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -100,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Napaka: token ni vrnjen.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.napaka_vracanje_tokena, Toast.LENGTH_SHORT).show();
                 }
             }
 

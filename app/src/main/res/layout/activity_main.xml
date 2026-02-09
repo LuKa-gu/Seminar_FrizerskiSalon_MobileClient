@@ -1,91 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     android:padding="24dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+        android:orientation="vertical">
 
+        <!-- Naslov -->
         <TextView
             android:id="@+id/tvNaslov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rezerviraj termin"
+            android:text="@string/rezerviraj_termin"
             android:textStyle="bold"
-            android:textSize="18dp"
-            android:padding="12dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"/>
+            android:textSize="22sp"
+            android:layout_marginBottom="16dp"
+            android:drawableStart="@drawable/outline_content_cut_24"
+            android:drawablePadding="4dp"/>
 
+        <!-- Izbrane storitve -->
         <TextView
             android:id="@+id/tvIzbraneStoritve"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Izbrane storitve: /"
-            android:padding="12dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"/>
+            android:text="@string/izbrane_storitve"
+            android:layout_marginBottom="16dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnIzberiStoritve"
-            android:text="Izberi storitve"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp" />
+            android:text="@string/izberi_storitve" />
 
         <TextView
             android:id="@+id/tvOpomba"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="*Možna je izbira več storitev hkrati."
-            android:textColor="@color/grey"
-            android:padding="8dp" />
+            android:text="@string/opomba_vec_storitev"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp" />
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            app:dividerThickness="1dp"/>
+
+        <TextView
+            android:id="@+id/tvSpol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/izberi_frizerja_dvopicje"
+            android:layout_marginTop="4dp" />
+
+        <!-- Spinner frizerjev -->
         <Spinner
             android:id="@+id/spinnerFrizerji"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="6dp"/>
 
         <TextView
             android:id="@+id/tvPreglejFrizerje"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preglej vse frizerje"
-            android:textColor="@color/red"
+            android:text="@string/preglej_frizerje"
+            android:textColor="?attr/colorPrimary"
+            android:layout_marginTop="8dp"
             android:clickable="true"
-            android:focusable="true"
-            android:padding="8dp" />
+            android:focusable="true" />
 
-        <EditText
-            android:id="@+id/etDatum"
-            android:hint="Izberi datum"
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:focusable="false"
-            android:clickable="true"
-            android:inputType="none" />
+            android:layout_marginVertical="16dp"
+            app:dividerThickness="1dp"/>
 
-        <Button
+
+        <!-- Datum -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDatum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/izberi_datum"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPreveri"
-            android:text="Preveri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/preveri"
             android:layout_marginTop="24dp" />
 
-        <Button
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            app:dividerThickness="1dp"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPregledTerminov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Moji termini"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp" />
+            android:text="@string/moji_termini"
+            android:layout_marginTop="6dp" />
 
     </LinearLayout>
 </ScrollView>

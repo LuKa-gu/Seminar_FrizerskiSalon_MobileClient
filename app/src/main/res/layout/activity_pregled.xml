@@ -1,31 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="?attr/colorSurface"
     android:padding="16dp">
 
-    <Button
+    <!-- Back Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNazaj"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nazaj"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="8dp"/>
+        android:text="@string/nazaj"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        style="@style/Widget.Material3.Button.TextButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
-        android:layout_width="match_parent"
+    <!-- Naslov -->
+    <LinearLayout
+        android:id="@+id/layoutNaslov"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Moji termini"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:padding="12dp"
-        android:textColor="@color/black"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/outline_content_cut_24" />
+
+        <TextView
+            android:id="@+id/tvNaslov"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/termini"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginStart="4dp"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTermini"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="12dp" />
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutNaslov"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"
+        android:clipToPadding="false"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

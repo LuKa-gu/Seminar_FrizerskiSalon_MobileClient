@@ -1,98 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     android:padding="24dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <!-- Naslov -->
         <TextView
             android:id="@+id/tvNaslov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registracija uporabnika"
+            android:text="@string/registracija_uporabnika"
             android:textStyle="bold"
-            android:textSize="18dp"
-            android:padding="12dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"/>
+            android:textSize="22sp"
+            android:layout_marginBottom="24dp"
+            android:drawableStart="@drawable/outline_content_cut_24"
+            android:drawablePadding="4dp"/>
 
+        <TextView
+            android:id="@+id/tvSpol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/spol"
+            android:layout_marginTop="6dp" />
+
+        <!-- Spol -->
         <Spinner
             android:id="@+id/spSpol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/spol_array"
-            android:layout_marginTop="16dp" />
+            android:entries="@array/spol_array" />
 
-        <EditText
-            android:id="@+id/etIme"
-            android:hint="Ime"
+        <!-- Ime -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etPriimek"
-            android:hint="Priimek"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etIme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/ime" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Priimek -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etNaslov"
-            android:hint="Naslov"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPriimek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/priimek" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Naslov -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etStarost"
-            android:hint="Starost"
-            android:inputType="number"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNaslov"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/naslov" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Starost -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etMail"
-            android:hint="E-mail"
-            android:inputType="textEmailAddress"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etStarost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/starost"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Email -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etTelefon"
-            android:hint="Telefon"
-            android:inputType="phone"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Telefon -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etUporabnisko"
-            android:hint="Uporabniško ime"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/telefon"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Uporabniško ime -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etGeslo"
-            android:hint="Geslo"
-            android:inputType="textPassword"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUporabnisko"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/uporabnisko_ime" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Geslo -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etGeslo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/geslo"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Gumb -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignup"
-            android:text="Registracija"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/registracija"
             android:layout_marginTop="24dp" />
 
     </LinearLayout>
 </ScrollView>
+

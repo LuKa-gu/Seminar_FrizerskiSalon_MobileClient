@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +65,7 @@ public class StoritveAdapter extends RecyclerView.Adapter<StoritveAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
-        ImageButton btnPlus;
+        MaterialButton btnPlus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

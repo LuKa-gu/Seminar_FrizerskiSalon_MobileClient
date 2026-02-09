@@ -48,52 +48,59 @@ public class TerminiAdapter
 
         Map<String, Object> t = termini.get(position);
 
-        h.tvFrizer.setText("Frizer: " + t.get("frizer"));
+        h.tvFrizer.setText(h.itemView.getContext().getString(
+                R.string.label_frizer, t.get("frizer")
+        ));
 
         // storitve
-        StringBuilder sb = new StringBuilder("Storitve:\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append(h.itemView.getContext().getString(R.string.label_storitve));
         List<Map<String, Object>> storitve =
                 (List<Map<String, Object>>) t.get("storitve");
 
         for (Map<String, Object> s : storitve) {
-            sb.append("- ")
-                    .append(s.get("naziv"))
-                    .append(" (")
-                    .append(((Number)s.get("trajanje")).intValue())
-                    .append(" min, ")
-                    .append(((Number)s.get("cena")).doubleValue())
-                    .append(" €)\n");
+            sb.append(h.itemView.getContext().getString(
+                    R.string.storitev_format,
+                    s.get("naziv"),
+                    ((Number) s.get("trajanje")).intValue(),
+                    ((Number) s.get("cena")).doubleValue())
+            );
+        }
+
+        // Odstrani zadnji \n
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
         }
 
         h.tvStoritve.setText(sb.toString());
 
-        h.tvZacetek.setText(
-                "Začetek termina: " +
-                        t.get("zacetek_termina")
-        );
+        h.tvZacetek.setText(h.itemView.getContext().getString(
+                R.string.label_zacetek, t.get("zacetek_termina")
+        ));
 
-        h.tvKonec.setText(
-                "Konec termina: " +
-                        t.get("konec_termina")
-        );
+        h.tvKonec.setText(h.itemView.getContext().getString(
+                R.string.label_konec, t.get("konec_termina")
+        ));
 
-        h.tvTrajanje.setText(
-                "Trajanje storitev: " +
-                        ((Number)t.get("skupno_trajanje")).doubleValue() + " min"
-        );
+        h.tvTrajanje.setText(h.itemView.getContext().getString(
+                R.string.label_trajanje, ((Number) t.get("skupno_trajanje")).intValue()
+        ));
 
-        h.tvCena.setText(
-                String.format(
-                    "Cena storitev: %.2f €",
-                        ((Number)t.get("skupna_cena")).doubleValue()
-                )
-        );
+        h.tvCena.setText(h.itemView.getContext().getString(
+                R.string.label_cena, ((Number) t.get("skupna_cena")).doubleValue()
+        ));
 
-        h.tvOpombe.setText("Opombe: " + t.get("opombe"));
+        h.tvOpombe.setText(h.itemView.getContext().getString(
+                R.string.label_opombe, t.get("opombe")
+        ));
 
-        h.tvStatus.setText("Status: " + t.get("status"));
+        h.tvStatus.setText(h.itemView.getContext().getString(
+                R.string.label_status, t.get("status")
+        ));
 
-        if (!"Rezervirano".equals(t.get("status"))) {
+        String rezervirano = h.itemView.getContext().getString(R.string.status_rezervirano);
+
+        if (!rezervirano.equals(t.get("status"))) {
             h.btnPreklic.setVisibility(View.GONE);
         }
 

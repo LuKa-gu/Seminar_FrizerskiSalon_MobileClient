@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import retrofit2.Response;
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 
 public class ErrorHandler {
 
@@ -36,13 +37,13 @@ public class ErrorHandler {
     /**
      * Prebere sporočilo iz network napake (onFailure throwable)
      */
-    public static String extractNetworkError(Throwable t) {
+    public static String extractNetworkError(Context context, Throwable t) {
         if (t instanceof java.net.SocketTimeoutException) {
-            return "Povezava je potekla (timeout).";
+            return context.getString(R.string.napaka_timeout);
         } else if (t instanceof java.net.UnknownHostException) {
-            return "Ni internetne povezave.";
+            return context.getString(R.string.napaka_ni_interneta);
         } else {
-            return "Napaka pri povezavi s strežnikom.";
+            return context.getString(R.string.napaka_povezava_streznik);
         }
     }
 
@@ -52,7 +53,7 @@ public class ErrorHandler {
     public static void showToastError(Context context, Response<?> response, Throwable t, String fallbackMessage) {
         String msg = response != null && !response.isSuccessful()
                 ? extractErrorMessage(response, fallbackMessage)
-                : extractNetworkError(t);
+                : extractNetworkError(context, t);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }

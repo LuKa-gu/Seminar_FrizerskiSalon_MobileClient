@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
         // minimalna validacija
         if (ime.isEmpty() || priimek.isEmpty() || naslov.isEmpty() || starost.isEmpty() ||
                 mail.isEmpty() || telefon.isEmpty() || uporabnisko.isEmpty() || geslo.isEmpty()) {
-            Toast.makeText(this, "Vsa polja so obvezna.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.obvezna_polja, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -91,26 +88,26 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
                 if (!response.isSuccessful()) {
-                    ErrorHandler.showToastError(SignupActivity.this, response, null, "Napaka pri registraciji.");
+                    ErrorHandler.showToastError(SignupActivity.this, response, null, getString(R.string.napaka_registracija));
                     return;
                 }
 
                 if (response.body() == null) {
-                    Toast.makeText(SignupActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignupActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 String successMessage = response.body().get("message");
 
                 if (successMessage == null) {
-                    successMessage = "Registracija uspešna";
+                    successMessage = getString(R.string.uspesna_registracija);
                 }
 
                 new androidx.appcompat.app.AlertDialog.Builder(SignupActivity.this)
-                        .setTitle("Uspeh")
-                        .setMessage(successMessage + "\n\nSedaj se lahko prijavite.")
+                        .setTitle(R.string.uspesna_registracija_naslov)
+                        .setMessage(getString(R.string.uspesna_registracija_dialog, successMessage, getString(R.string.uspesna_registracija_nadaljevanje)))
                         .setCancelable(false)
-                        .setPositiveButton("OK", (dialog, which) -> {
+                        .setPositiveButton(R.string.ok, (dialog, which) -> {
                             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                             finish();
                         })

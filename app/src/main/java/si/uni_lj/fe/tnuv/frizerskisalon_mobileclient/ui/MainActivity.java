@@ -17,9 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -148,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(
                                 MainActivity.this,
-                                "Napaka pri pridobivanju frizerjev.",
+                                R.string.napaka_pridobivanje_frizerjev,
                                 Toast.LENGTH_LONG
                         ).show();
                     }
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(
                                 MainActivity.this,
-                                "Napaka pri pridobivanju storitev.",
+                                R.string.napaka_pridobivanje_storitev,
                                 Toast.LENGTH_LONG
                         ).show();
                     }
@@ -195,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                ============================ */
             btnIzberiStoritve.setOnClickListener(v -> {
                 if (storitveList.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Storitve še niso naložene.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.storitve_niso_nalozene, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -210,9 +207,9 @@ public class MainActivity extends AppCompatActivity {
                 rvStoritve.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Izberi storitve")
+                        .setTitle(R.string.izberi_storitve)
                         .setView(dialogView)
-                        .setPositiveButton("OK", (dialog, which) -> {
+                        .setPositiveButton(R.string.ok, (dialog, which) -> {
                             selectedStoritveIds.clear();
                             selectedStoritveNazivi.clear();
 
@@ -230,13 +227,15 @@ public class MainActivity extends AppCompatActivity {
 
                             if (!selectedStoritveNazivi.isEmpty()) {
                                 String prikaz = String.join(", ", selectedStoritveNazivi);
-                                tvIzbraneStoritve.setText("Izbrane storitve: " + prikaz);
+                                tvIzbraneStoritve.setText(getString(
+                                        R.string.label_izbrane_storitve, prikaz
+                                ));
                             } else {
-                                tvIzbraneStoritve.setText("Izbrane storitve: /");
+                                tvIzbraneStoritve.setText(R.string.izbrane_storitve);
                             }
 
                         })
-                        .setNegativeButton("Prekliči", null)
+                        .setNegativeButton(R.string.preklici, null)
                         .show();
             });
 
@@ -249,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 if(selectedIndex < 0 || frizerjiList.isEmpty()) {
                     Toast.makeText(
                             this,
-                            "Izberi frizerja.",
+                            R.string.izberi_frizerja,
                             Toast.LENGTH_SHORT
                     ).show();
                     return;
@@ -261,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
                 if (dan.isEmpty() || selectedStoritveIds.isEmpty()) {
                     Toast.makeText(
                             this,
-                            "Izberi datum in vsaj eno storitev.",
+                            R.string.izberi_datum_in_storitev,
                             Toast.LENGTH_SHORT
                     ).show();
                     return;
@@ -291,12 +290,12 @@ public class MainActivity extends AppCompatActivity {
                             Response<Map<String, Object>> response
                     ) {
                         if (!response.isSuccessful()) {
-                            ErrorHandler.showToastError(MainActivity.this, response, null, "Napaka pri izračunu razpoložljivosti.");
+                            ErrorHandler.showToastError(MainActivity.this, response, null, getString(R.string.napaka_izracun_razpolozljivosti));
                             return;
                         }
 
                         if (response.body() == null) {
-                            Toast.makeText(MainActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -319,19 +318,22 @@ public class MainActivity extends AppCompatActivity {
                                     String od = blok.get("od") != null ? blok.get("od").toString() : "?";
                                     String do_ = blok.get("do") != null ? blok.get("do").toString() : "?";
 
-                                    bloki.add(od + " - " + do_);
+                                    bloki.add(getString(
+                                            R.string.blok_format, od, do_
+                                    ));
                                 }
                             }
                         }
 
                         // če ni razpoložljivih blokov
-                        if (bloki == null || bloki.isEmpty()) {
-                            String razlog;
+                        if (bloki.isEmpty()) {
+                            String razlog = null;
 
                             if (data.containsKey("razlog") && data.get("razlog") != null) {
                                 razlog = data.get("razlog").toString();
-                            } else {
-                                razlog = "Frizer ne dela ta dan.";
+                            }
+                            if (razlog == null || razlog.trim().isEmpty()) {
+                                razlog = getString(R.string.razlog_frizer_ne_dela);
                             }
 
                             Toast.makeText(
@@ -421,12 +423,12 @@ public class MainActivity extends AppCompatActivity {
                     Response<Map<String, Object>> response
             ) {
                 if (!response.isSuccessful()) {
-                    ErrorHandler.showToastError(MainActivity.this, response, null, "Napaka pri pridobivanju podrobnosti storitve.");
+                    ErrorHandler.showToastError(MainActivity.this, response, null, getString(R.string.napaka_pridobivanje_podrobnosti_storitve));
                     return;
                 }
 
                 if (response.body() == null) {
-                    Toast.makeText(MainActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -435,16 +437,15 @@ public class MainActivity extends AppCompatActivity {
                 String ime = String.valueOf(s.get("Ime"));
                 String opis = String.valueOf(s.get("Opis"));
                 int trajanje = ((Number) s.get("Trajanje")).intValue();
-                String cena = String.valueOf(s.get("Cena")); // ker je Cena decimal
+                double cena = Double.parseDouble(s.get("Cena").toString()); // ker je Cena decimal
 
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle(ime)
-                        .setMessage(
-                                "Opis:\n" + opis +
-                                        "\n\nTrajanje: " + trajanje + " min" +
-                                        "\n\nCena: " + cena + " €"
-                        )
-                        .setPositiveButton("OK", null)
+                        .setMessage(getString(
+                                R.string.dialog_storitev_podrobnosti,
+                                opis, trajanje, cena
+                        ))
+                        .setPositiveButton(R.string.ok, null)
                         .show();
 
             }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -12,6 +11,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 
+import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.R;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.ui.LoginActivity;
 import si.uni_lj.fe.tnuv.frizerskisalon_mobileclient.utils.ErrorHandler;
 public class JWTManager {
@@ -39,7 +39,7 @@ public class JWTManager {
                 if (response.isSuccessful()) {
                     if (response.body() == null) {
                         // Prazen odgovor strežnika = napaka
-                        Toast.makeText(context, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, context.getString(R.string.napaka_prazen_odgovor_streznika), Toast.LENGTH_LONG).show();
                         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                                 .edit().remove(PREFS_TOKEN_KEY).apply();
                         Intent intent = new Intent(context, LoginActivity.class);
@@ -53,7 +53,7 @@ public class JWTManager {
 
                 } else {
                     // Token neveljaven → izbriši in pojdi na login
-                    ErrorHandler.showToastError(context, response, null, "Token ni veljaven, prijavi se ponovno.");
+                    ErrorHandler.showToastError(context, response, null, context.getString(R.string.napaka_neveljaven_token));
                     context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                             .edit().remove(PREFS_TOKEN_KEY).apply();
                     Intent intent = new Intent(context, LoginActivity.class);

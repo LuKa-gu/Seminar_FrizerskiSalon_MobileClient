@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -73,18 +75,33 @@ public class PredogledActivity extends AppCompatActivity {
             ArrayList<String> bloki =
                     getIntent().getStringArrayListExtra("razpolozljivi_bloki");
 
-            // ===== izpis =====
-            tvStoritve.setText("Izbrane storitve:\n- " +
-                    String.join("\n- ", storitveNazivi));
-            tvFrizer.setText("Izbran frizer: " + frizerIme);
-            tvDan.setText("Izbran dan: " + dan);
+            List<String> formatirane = new ArrayList<>();
+            for (String naziv : storitveNazivi) {
+                formatirane.add(getString(R.string.item_bullet, naziv));
+            }
 
-            tvTrajanje.setText("Trajanje storitev: " + trajanje + " min");
+            // ===== izpis =====
+            tvStoritve.setText(getString(
+                    R.string.label_izbrane_storitve_tri,
+                    TextUtils.join("\n", formatirane)
+            ));
+            tvFrizer.setText(getString(
+                    R.string.label_izbran_frizer, frizerIme
+            ));
+            tvDan.setText(getString(
+                    R.string.label_izbran_dan, dan
+            ));
+
+            tvTrajanje.setText(getString(
+                    R.string.label_trajanje, trajanje
+            ));
             if (bloki == null || bloki.isEmpty()) {
-                tvBloki.setText("Ni razpoložljivih blokov");
+                tvBloki.setText(R.string.ni_blokov);
             } else {
-                tvBloki.setText("Možni začetki termina:\n" +
-                        String.join("\n", bloki));
+                tvBloki.setText(getString(
+                        R.string.mozni_zacetki_termina,
+                        String.join("\n", bloki)
+                ));
             }
 
             // ===== TimePicker =====
@@ -116,7 +133,7 @@ public class PredogledActivity extends AppCompatActivity {
             btnPotrdi.setOnClickListener(v -> {
                 if (izbranaUra == null) {
                     Toast.makeText(this,
-                            "Izberi uro",
+                            R.string.izberi_uro,
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -135,19 +152,19 @@ public class PredogledActivity extends AppCompatActivity {
                 body.put("opombe", opombe.isEmpty() ? null : opombe);
 
                 PredogledApi api = retrofit.create(PredogledApi.class);
-                Log.d("predogled_body", body.toString()); //test
+
                 api.posljiPredogled(body).enqueue(new Callback<Map<String, Object>>() {
                     @Override
                     public void onResponse(Call<Map<String, Object>> call,
                                            Response<Map<String, Object>> response) {
 
                         if (!response.isSuccessful()) {
-                            ErrorHandler.showToastError(PredogledActivity.this, response, null, "Napaka pri pripravi predogleda.");
+                            ErrorHandler.showToastError(PredogledActivity.this, response, null, getString(R.string.napaka_priprava_predogleda));
                             return;
                         }
 
                         if (response.body() == null) {
-                            Toast.makeText(PredogledActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PredogledActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                             return;
                         }
 

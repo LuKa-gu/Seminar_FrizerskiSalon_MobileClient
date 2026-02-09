@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="red">#FFFF0000</color>
-    <color name="grey">#FF777777</color>
+
+    <!-- Primary (Bootswatch United style) -->
+    <color name="primary">#FD7E14</color>
+    <color name="onPrimary">#FFFFFF</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#F8F9FA</color>
+    <color name="onBackground">#212529</color>
+
+    <!-- Surfaces (cards, dialogs) -->
+    <color name="surface">#FFFFFF</color>
+    <color name="onSurface">#212529</color>
+
+    <!-- Error -->
+    <color name="error">#DC3545</color>
+    <color name="onError">#FFFFFF</color>
+
 </resources>

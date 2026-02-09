@@ -88,41 +88,50 @@ public class RezervacijaActivity extends AppCompatActivity {
                 int trajanje = (int) Double.parseDouble(s.get("trajanje").toString());
                 double cena = Double.parseDouble(s.get("cena").toString());
 
-                storitveText
-                        .append("- ")
-                        .append(naziv)
-                        .append(" (")
-                        .append(trajanje)
-                        .append(" min, ")
-                        .append(cena)
-                        .append(" €)")
-                        .append("\n");
+                storitveText.append(getString(R.string.storitev_format, naziv, trajanje, cena));
+            }
+
+            // Odstrani zadnji \n
+            if (storitveText.length() > 0) {
+                storitveText.setLength(storitveText.length() - 1);
             }
 
             // ===== izpis =====
-            tvFrizer.setText("Izbran frizer: " + frizerIme);
-            tvStoritve.setText("Izbrane storitve:\n" + storitveText.toString());
-            tvZacetek.setText("Zečetek termina: " + zacetek);
-            tvKonec.setText("Konec termina: " + konec);
+            tvFrizer.setText(getString(
+                    R.string.label_izbran_frizer, frizerIme
+            ));
+            tvStoritve.setText(getString(
+                    R.string.label_izbrane_storitve_tri, storitveText.toString()
+            ));
+            tvZacetek.setText(getString(
+                    R.string.label_zacetek, zacetek
+            ));
+            tvKonec.setText(getString(
+                    R.string.label_konec, konec
+            ));
 
-            tvSkTrajanje.setText("Trajanje storitev: " + skTrajanje + " min");
-            tvSkCena.setText("Cena storitev: " + skCena + " €");
+            tvSkTrajanje.setText(getString(
+                    R.string.label_trajanje, skTrajanje
+            ));
+            tvSkCena.setText(getString(
+                    R.string.label_cena, skCena
+            ));
 
             tvOpombe.setText(
                     opombe != null
-                            ? "Opombe: " + opombe
-                            : "Opombe: /"
+                            ? getString(R.string.label_opombe, opombe)
+                            : getString(R.string.opombe_prazno)
             );
 
             btnPotrdi.setOnClickListener(v -> {
                 new androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setTitle("Potrditev rezervacije")
-                        .setMessage("Ali ste prepričani, da želite potrditi rezervacijo?")
-                        .setPositiveButton("Da", (dialog, which) -> {
+                        .setTitle(R.string.potrditev_rezervacije)
+                        .setMessage(R.string.potrditev_rezervacije_potrditev)
+                        .setPositiveButton(R.string.da, (dialog, which) -> {
 
                             posljiRezervacijo(retrofit);
                         })
-                        .setNegativeButton("Ne", null)
+                        .setNegativeButton(R.string.ne, null)
                         .show();
             });
 
@@ -154,12 +163,12 @@ public class RezervacijaActivity extends AppCompatActivity {
                                    Response<Map<String, Object>> response) {
 
                 if (!response.isSuccessful()) {
-                    ErrorHandler.showToastError(RezervacijaActivity.this, response, null, "Napaka pri rezervaciji termina.");
+                    ErrorHandler.showToastError(RezervacijaActivity.this, response, null, getString(R.string.napaka_rezervacija_termina));
                     return;
                 }
 
                 if (response.body() == null) {
-                    Toast.makeText(RezervacijaActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RezervacijaActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -168,9 +177,9 @@ public class RezervacijaActivity extends AppCompatActivity {
 
                 // SUCCESS popup
                 new androidx.appcompat.app.AlertDialog.Builder(RezervacijaActivity.this)
-                        .setTitle("Uspeh")
+                        .setTitle(R.string.uspeh)
                         .setMessage(message)
-                        .setPositiveButton("OK", (d, w) -> {
+                        .setPositiveButton(R.string.ok, (d, w) -> {
                             Intent intent = new Intent(
                                     RezervacijaActivity.this,
                                     MainActivity.class

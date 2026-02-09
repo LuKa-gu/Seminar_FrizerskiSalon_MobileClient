@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:padding="16dp">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -13,69 +14,87 @@
             android:id="@+id/tvNaslov"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Povzetek rezervacije"
+            android:text="@string/povzetek_rezervacije"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="22sp"
             android:padding="12dp"
-            android:layout_marginTop="24dp"
-            android:textColor="@color/black"/>
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/outline_content_cut_24"
+            android:drawablePadding="4dp"/>
 
+        <!-- Podrobnosti rezervacije -->
         <TextView
             android:id="@+id/tvStoritve"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvFrizer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvZacetek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvKonec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvSkTrajanje"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvSkCena"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textColor="?attr/colorOnSurface"/>
 
         <TextView
             android:id="@+id/tvOpombe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:minLines="3"
-            android:layout_marginTop="12dp"/>
+            android:textColor="?attr/colorOnSurface"/>
 
-        <Button
+        <!-- Potrdi -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPotrdi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Potrdi"
-            android:layout_marginTop="12dp"/>
+            android:text="@string/potrdi"
+            android:layout_marginTop="12dp"
+            android:paddingVertical="12dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"/>
 
-        <Button
+        <!-- Prekliči -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPreklici"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prekliči"
-            android:layout_marginTop="12dp" />
+            android:text="@string/preklici"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="12dp"
+            android:backgroundTint="?attr/colorSurfaceVariant"
+            android:textColor="?attr/colorOnSurfaceVariant"/>
 
     </LinearLayout>
 </ScrollView>

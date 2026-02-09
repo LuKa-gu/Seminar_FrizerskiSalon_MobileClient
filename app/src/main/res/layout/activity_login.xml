@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="?attr/colorSurface">
 
+    <!-- Naslov -->
     <TextView
         android:id="@+id/tvNaslov"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Prijava uporabnika"
+        android:text="@string/prijava_uporabnika"
         android:textStyle="bold"
-        android:textSize="18dp"
-        android:padding="12dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/black"/>
+        android:textSize="22sp"
+        android:layout_marginBottom="24dp"
+        android:drawableStart="@drawable/outline_content_cut_24"
+        android:drawablePadding="4dp"/>
 
-    <EditText
-        android:id="@+id/etUsername"
-        android:hint="Uporabniško ime"
+    <!-- Username -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/uporabnisko_ime" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Password -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp">
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:hint="Geslo"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/geslo"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <!-- Login Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
-        android:text="Prijava"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"/>
+        android:text="@string/prijava"
+        android:layout_marginTop="24dp" />
 
+    <!-- Signup link -->
     <TextView
         android:id="@+id/tvSignupLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Še nimaš računa? Registriraj se."
-        android:textColor="@color/red"
-        android:layout_marginTop="16dp" />
+        android:text="@string/signup_link"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true" />
 </LinearLayout>

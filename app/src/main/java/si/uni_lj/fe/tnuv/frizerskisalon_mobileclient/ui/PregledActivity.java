@@ -92,21 +92,21 @@ public class PregledActivity extends AppCompatActivity {
                     Response<Map<String, Object>> response) {
 
                 if (!response.isSuccessful()) {
-                    ErrorHandler.showToastError(PregledActivity.this, response, null, "Napaka pri preklicu termina.");
+                    ErrorHandler.showToastError(PregledActivity.this, response, null, getString(R.string.napaka_preklic_termina));
                     return;
                 }
 
                 if (response.body() == null) {
-                    Toast.makeText(PregledActivity.this, "Prazen odgovor strežnika.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PregledActivity.this, R.string.napaka_prazen_odgovor_streznika, Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 Object msgObj = response.body().get("message");
-                String msg = msgObj != null ? msgObj.toString() : "Termin preklican.";
+                String msg = msgObj != null ? msgObj.toString() : getString(R.string.termin_uspesno_preklican);
 
                 new AlertDialog.Builder(PregledActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK", (d, w) -> naloziTermine())
+                        .setPositiveButton(R.string.ok, (d, w) -> naloziTermine())
                         .show();
             }
 
@@ -127,7 +127,7 @@ public class PregledActivity extends AppCompatActivity {
                 if (!response.isSuccessful() || response.body() == null) {
                     Toast.makeText(
                             PregledActivity.this,
-                            "Napaka pri nalaganju terminov.",
+                            R.string.napaka_nalaganje_terminov,
                             Toast.LENGTH_LONG
                     ).show();
                     return;
@@ -136,10 +136,10 @@ public class PregledActivity extends AppCompatActivity {
                 if (adapter == null) {
                     adapter = new TerminiAdapter(response.body(), termin -> {
                         new AlertDialog.Builder(PregledActivity.this)
-                                .setTitle("Preklic termina")
-                                .setMessage("Ali ste prepričani, da želite preklicati ta termin?")
-                                .setPositiveButton("Da", (d, w) -> preklicTermin(termin))
-                                .setNegativeButton("Ne", null)
+                                .setTitle(R.string.preklic_termina)
+                                .setMessage(R.string.preklic_termina_potrditev)
+                                .setPositiveButton(R.string.da, (d, w) -> preklicTermin(termin))
+                                .setNegativeButton(R.string.ne, null)
                                 .show();
                     });
                     rv.setAdapter(adapter);
